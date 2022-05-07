@@ -9,16 +9,80 @@ import {
   InputGroup,
   InputRightElement,
   Button,
+  useToast,
 } from '@chakra-ui/react';
+import axios from 'axios';
+
+import { useHistory } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
+  const [loading, setloading] = useState(false);
+
+  const toast = useToast();
+  const history = useHistory();
 
   const handleShow = () => setShow(!show);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    setloading(true);
+
+    if (!email || !password) {
+      toast({
+        title: 'Please, fill all the fields',
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
+      setloading(false);
+      return;
+    }
+
+    try {
+      const config = {
+        headers: {
+          'Content-type': 'application/json',
+        },
+      };
+
+      const { data } = await axios.post(
+        '/api/auth/login',
+        {
+          email,
+          password,
+        },
+        config
+      );
+
+
+      toast({
+        title: 'Login successful',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
+      setloading(false);
+
+      localStorage.setItem('userInfo', JSON.stringify(data));
+
+      history.push('/chats');
+    } catch (error) {
+      toast({
+        title: 'Error occurred',
+        status: 'error',
+        description: error.response.data.message,
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
+
+      setloading(false);
+    }
+  };
 
   return (
     <VStack spacing={'5px'}>
@@ -51,6 +115,7 @@ const Login = () => {
         width='100%'
         style={{ marginTop: 15 }}
         onClick={handleSubmit}
+        isLoading={loading}
       >
         Login
       </Button>
