@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Stack,
-  HStack,
   VStack,
   FormControl,
   FormLabel,
@@ -13,6 +11,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -24,10 +23,9 @@ const Signup = () => {
   const [loading, setloading] = useState(false);
 
   const toast = useToast();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleShow = () => setShow(!show);
-
 
   const postDetails = async (pics) => {
     setloading(true);
@@ -121,7 +119,6 @@ const Signup = () => {
         config
       );
 
-
       toast({
         title: 'Registration successful',
         status: 'success',
@@ -133,7 +130,7 @@ const Signup = () => {
 
       localStorage.setItem('userInfo', JSON.stringify(data));
 
-      history.push('/chats');
+      navigate('/chats');
     } catch (error) {
       toast({
         title: 'Error occurred',
