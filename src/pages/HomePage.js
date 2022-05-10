@@ -11,8 +11,17 @@ import {
 } from '@chakra-ui/react';
 import Login from '../components/authentication/Login';
 import Signup from '../components/authentication/Signup';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (userInfo) return navigate('/chats');
+  }, [navigate]);
+
   return (
     <Container maxW='xl' centerContent>
       <Box
