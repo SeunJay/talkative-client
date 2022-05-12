@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { ChatState } from '../context/ChatProvider';
 import ChatLoading from '../components/ChatLoading';
 import { getSender } from '../config/chatLogic';
+import GroupChatModal from './GroupChatModal';
 
 const MyChats = () => {
   // const [loggedUser, setLoggedUser] = useState();
@@ -22,7 +23,6 @@ const MyChats = () => {
       };
 
       const { data } = await axios.get(`/api/chats`, config);
-      console.log(data);
       setChats(data);
     } catch (error) {
       console.log(error.message);
@@ -44,7 +44,6 @@ const MyChats = () => {
     // setLoggedUser(JSON.parse(localStorage.getItem('userInfo')));
     fetchChats();
   }, []);
-
 
   return (
     <Box
@@ -68,13 +67,15 @@ const MyChats = () => {
         alignItems='center'
       >
         My Chats
-        <Button
-          d='flex'
-          fontSize={{ base: '17px', md: '10px', lg: '17px' }}
-          rightIcon={<AddIcon />}
-        >
-          New Group Chat
-        </Button>
+        <GroupChatModal>
+          <Button
+            d='flex'
+            fontSize={{ base: '17px', md: '10px', lg: '17px' }}
+            rightIcon={<AddIcon />}
+          >
+            New Group Chat
+          </Button>
+        </GroupChatModal>
         {/* <GroupChatModal>
          
         </GroupChatModal> */}
