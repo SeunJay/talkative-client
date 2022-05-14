@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ChatBox from '../components/ChatBox';
 import MyChats from '../components/MyChats';
 import SideDrawer from '../components/SideDrawer';
@@ -8,6 +8,9 @@ import { ChatState } from '../context/ChatProvider';
 
 const ChatsPage = () => {
   const { user } = ChatState();
+
+  const [fetchAgain, setFetchAgain] = useState(false);
+
   const fetchChats = async () => {
     // const { data } = await axios.get('/api/chats');
     // console.log(data);
@@ -26,8 +29,10 @@ const ChatsPage = () => {
         h='91.5vh'
         p='10px'
       >
-        {user && <MyChats />}
-        {user && <ChatBox />}
+        {user && <MyChats fetchAgain={fetchAgain} />}
+        {user && (
+          <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+        )}
       </Box>
     </div>
   );
