@@ -22,7 +22,11 @@ import { ChatState } from '../context/ChatProvider';
 import UserBadgeItem from './user-avatar/UserBadgeItem';
 import UserListItem from './user-avatar/UserListItem';
 
-const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
+const UpdateGroupChatModal = ({
+  fetchAgain,
+  setFetchAgain,
+  fetchChatMessages,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
@@ -69,6 +73,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 
       setSelectedChat(data);
       setFetchAgain(!fetchAgain);
+      fetchChatMessages();
       setLoading(false);
     } catch (error) {
       setLoading(false);
