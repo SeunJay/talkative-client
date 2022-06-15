@@ -29,30 +29,25 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat, setSelectedChat, notification, setNotification } =
+    ChatState();
 
   const toast = useToast();
 
   useEffect(() => {
     socket = io(END_POINT);
 
-    console.log('effect...');
     socket.emit('setup', user);
     socket.on('connected', () => setIsSocketConnected(true));
-    // socket.on('typing', (data) => {
-    //   console.log(data);
-    //   setIsTyping(true)
-    // });
+    socket.on('typing', () => setIsTyping(true));
     socket.on('stop-typing', () => setIsTyping(false));
 
     return () => socket.disconnect();
   }, [user]);
 
-  useEffect(() => {
-    console.log(socket);
-
-    socket.on('typing', () => setIsTyping(true));
-  });
+  // useEffect(() => {
+  //   socket.on('typing', () => setIsTyping(true));
+  // });
 
   useEffect(() => {
     fetchChatMessages();
@@ -60,11 +55,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket.on('message-received', (newMessageRecieved) => {
-      if (!selectedChat || selectedChat._id !== newMessageRecieved.chat._id) {
+    socket.on('message-received', (newMessageReceived) => {
+      if (!selectedChat || selectedChat._id !== newMessageReceived.chat._id) {
         //send notification
+        if (!notification.includes(newMessageReceived)) {
+          setNotification([newMessageReceived, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
       } else {
-        setMessages([...messages, newMessageRecieved]);
+        setMessages([...messages, newMessageReceived]);
       }
     });
   });
