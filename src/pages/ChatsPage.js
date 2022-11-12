@@ -11,14 +11,6 @@ const ChatsPage = () => {
 
   const [fetchAgain, setFetchAgain] = useState(false);
 
-  const fetchChats = async () => {
-    // const { data } = await axios.get('/api/chats');
-    // console.log(data);
-  };
-
-  useEffect(() => {
-    fetchChats();
-  }, []);
   return (
     <div style={{ width: '100%' }}>
       {user && <SideDrawer />}
